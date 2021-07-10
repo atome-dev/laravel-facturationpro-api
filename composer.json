@@ -1,0 +1,55 @@
+{
+    "name": "atome-dev/laravel-facturation-pro-api",
+    "description": "Interface to facturation.pro API with Laravel",
+    "keywords": [
+        "atome-dev",
+        "facturation-pro-api"
+    ],
+    "homepage": "https://github.com/atome-dev/laravel-facturation-pro-api",
+    "license": "MIT",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Nicolas Chauvet",
+            "email": "contact@atome-dev.fr",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^7.3",
+        "illuminate/support": "^6.0|^7.0|^8.0",
+        "guzzlehttp/guzzle": "^7.3"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^4.0",
+        "phpunit/phpunit": "^9.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "AtomeDev\\FacturationProApi\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "AtomeDev\\FacturationProApi\\Tests\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit",
+        "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
+
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "AtomeDev\\FacturationProApi\\FacturationProApiServiceProvider"
+            ],
+            "aliases": {
+                "FacturationProApi": "AtomeDev\\FacturationProApi\\Facades\\FacturationProApi"
+            }
+        }
+    }
+}
