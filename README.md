@@ -11,7 +11,7 @@ This package may not be complete and may not work properly, so use it for EDUCAT
 Beside this recommendation, I personally use it in real production so it should be stable but I cannot be responsible in any way for any malfunction.
 
 ## Install
-composer require AtomeDev\FacturationProApi
+composer require atome-dev/laravel-facturation-pro-api
 
 ## Export configuration file
 php artisan vendor:publish --provider="AtomeDev\FacturationProApi\FacturationProApiServiceProvider" --tag="config"
