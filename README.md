@@ -16,6 +16,34 @@ composer require AtomeDev\FacturationProApi
 ## Export configuration file
 php artisan vendor:publish --provider="AtomeDev\FacturationProApi\FacturationProApiServiceProvider" --tag="config"
 
+## Usage
+
+/app/Http/Controllers/FacturationProController.php:
+```php
+namespace App\Http\Controllers;
+
+use AtomeDev\FacturationProApi\Facades\FacturationProApi;
+use Illuminate\Http\Request;
+
+class FacturationProController extends Controller
+{
+    public function index() {
+        $infoApi = FacturationProApi::getApi('account', 'infos');
+        $ret = FacturationProApi::callApi($infoApi);
+        dump($ret);
+    }
+}
+```
+/routes/web.php: 
+```php
+Route::get('/facturation-pro', [FacturationProController::class, 'index']);
+``` 
+ 
+![image](https://user-images.githubusercontent.com/81640238/125179083-263c9200-e1eb-11eb-9290-d9ae3d1bd30f.png)
+
+
+
+
 ## Security Vulnerabilities
 
 If you discover a security vulnerability within this package, please send me an e-mail via [contact@atome-dev.fr](mailto:contact@atome-dev.fr). All security vulnerabilities will be promptly addressed.
@@ -23,4 +51,3 @@ If you discover a security vulnerability within this package, please send me an 
 ## License
 
 Facturation Pro Api for Laravel is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
- 
