@@ -61,6 +61,8 @@ public function boot()
 ```
 
 
+![image](https://user-images.githubusercontent.com/81640238/125192117-57967b80-e246-11eb-88d0-569479ac0c96.png)
+
 
 ## Security Vulnerabilities
 
