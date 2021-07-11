@@ -43,6 +43,24 @@ Route::get('/facturation-pro', [FacturationProController::class, 'index']);
 
 
 
+## Livewire test form
+If you have Livewire installed, you might be interested in this form to interact with the API. See the files in extra directory.
+
+![image](https://user-images.githubusercontent.com/81640238/125191292-eb197d80-e241-11eb-934c-2dbaa35a3bb4.png)
+
+Declare the route file in app/Providers/RouteServiceProvider.php: 
+```php
+public function boot()
+{
+    $this->routes(function () {
+        Route::middleware('web')
+            ->namespace($this->namespace)
+            ->group(base_path('routes/facturation-pro.php'));        
+    });
+}
+```
+
+
 
 ## Security Vulnerabilities
 
