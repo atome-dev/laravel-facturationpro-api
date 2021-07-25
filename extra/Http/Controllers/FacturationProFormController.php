@@ -15,7 +15,6 @@ class FacturationProFormController extends Controller
 
     public function index()
     {
-        exit ('ok');
         return view('facturation-pro-form');
     }
 

@@ -7,7 +7,7 @@ use Livewire\Component;
 
 class FacturationProForm extends Component
 {
-    public $apis;
+    public $categories;
     public $category = '';
 
     public $actions = [];
@@ -31,9 +31,7 @@ class FacturationProForm extends Component
     {
         // Retrieve the list of all available api
         $FacturationApi = new FacturationProApi();
-        $this->apis = $FacturationApi->getApis();
-
-        $this->firmId = config('facturation-pro-api.firm', '');
+        $this->categories = $FacturationApi->getCategories();
     }
 
 
@@ -42,9 +40,15 @@ class FacturationProForm extends Component
         return view('livewire.facturation-pro-form');
     }
 
-    public function updatedCategory($value)
+    public function updatedCategory($category)
     {
-        $this->actions = $this->apis[$value] ?? [];
+        if (isSet($this->categories[$category])) {
+            $Api = new $this->categories[$category];
+            $this->actions = $Api->getActions();
+        } else {
+            $this->actions = [];
+        }
+
         $this->action = "";
         $this->options = [];
         $this->orders = [];
@@ -60,26 +64,44 @@ class FacturationProForm extends Component
         $this->result = null;
     }
 
-    public function updatedAction($value)
+    public function updatedAction($action)
     {
-        $this->options = $this->apis[$this->category][$value]['options'] ?? [];
+        $Api = new $this->categories[$this->category];
+        //$this->actions = $Api->getActions();
 
-        if (isSet($this->apis[$this->category][$value]['parameters'])) {
-            foreach ($this->apis[$this->category][$value]['parameters'] as $paramName) {
-                $this->parameters[$paramName] = '';
+
+        $this->options = $this->actions[$action]['options'] ?? [];
+
+        if (isSet($this->actions[$action]['parameters'])) {
+            foreach ($this->actions[$action]['parameters'] as $paramName) {
+                switch ($paramName) {
+                    case 'FIRM_ID':
+                        $this->parameters[$paramName] = $this->firmId     = config('facturation-pro-api.firm');
+                        break;
+
+
+                        //$this->apiUrl     = config('facturation-pro-api.url');
+                        //$this->accountId  = config('facturation-pro-api.id');
+                        //$this->accountKey = config('facturation-pro-api.key');
+                        //$this->userAgent  = config('facturation-pro-api.ua');
+
+                    default:
+                        $this->parameters[$paramName] = '';
+                        break;
+                }
+
             }
         }
 
-        $this->orders = $this->apis[$this->category][$value]['orders'] ?? [];
-        $this->sorts = $this->apis[$this->category][$value]['sorts'] ?? [];
+        $this->orders = $this->actions[$action]['orders'] ?? [];
+        $this->sorts = $this->actions[$this->category][$action]['sorts'] ?? [];
 
         $this->result = null;
     }
 
     public function callApi()
     {
-        $FacturationApi = new FacturationProApi();
-        $templateApi = $FacturationApi->getApi($this->category, $this->action);
+        $templateApi = $this->actions[$this->action];
 
         if ($templateApi === false) {
             return;
@@ -129,6 +151,7 @@ class FacturationProForm extends Component
             }
         }
 
-        $this->result = $FacturationApi->callApi($api);
+        $Api = new $this->categories[$this->category];
+        $this->result = $Api->callApi($api);
     }
 }
