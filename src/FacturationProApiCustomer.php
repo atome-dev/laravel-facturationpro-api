@@ -3,6 +3,7 @@ namespace AtomeDev\FacturationProApi;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
+use Illuminate\Support\Collection;
 
 class FacturationProApiCustomer extends FacturationProApi
 {
@@ -172,11 +173,145 @@ class FacturationProApiCustomer extends FacturationProApi
         ];
     }
 
-    public function get($id)
+    public function test()
     {
+        echo "<h1>LIST</h1>";
+        $list = $this->list();
+
+        if ($list['success']) {
+            echo "<pre>";
+            print_r($list['response']);
+            echo "</pre>";
+        }
+        echo "<hr>";
+
+
+        echo "<h1>DETAIL</h1>";
+        foreach ($list['response'] as $customer) {
+            $detail = $this->get($customer['id'], true);
+
+            if ($detail['success']) {
+                echo "<pre>";
+                print_r($detail['response']);
+                echo "</pre>";
+            }
+
+        }
+        echo "<hr>";
+
+
+
+        echo "<h1>NEW</h1>";
+
+        $customer = new Collection([
+            'account_code'      => null,
+            'api_custom'        => null,
+            'api_id'            => null,
+            'category_id'       => null,
+            'city'              => 'Palaiseau',
+            'civility'          => 'Mme',
+            'company_name'      => date('Y-m-d H:i:s'),
+            'country'           => 'France',
+            'currency'          => 'EUR',
+            'default_vat'       => '20',
+            'discount'          => null,
+            'email'             => null,
+            'fax'               => null,
+            'first_name'        => date('D'),
+            'id'                => null,
+            'individual'        => null,
+            'language'          => 'fr',
+            'last_invoiced_on'  => null,
+            'last_name'         => date('F'),
+            'mobile'            => null,
+            'pay_before'        => null,
+            'penalty'           => null,
+            'phone'             => null,
+            'short_name'        => null,
+            'siret'             => null,
+            'street'            => null,
+            'validity'          => null,
+            'vat_exemption'     => null,
+            'vat_number'        => null,
+            'website'           => null,
+            'zip_code'          => '91120'
+        ]);
+
+       $new = $this->save($customer);
+       var_dump($new);
+       echo "<hr>";
 
     }
 
 
+
+    public function list()
+    {
+        $api = [
+            'verb'   => $this->actions['list']['verb'],
+            'action' => $this->actions['list']['action'],
+            'output' => 'TEXT',
+            'parameters' => ['FIRM_ID' => $this->firmId]
+        ];
+
+        return $this->callApi($api);
+    }
+
+    public function find($filter)
+    {
+
+    }
+
+    public function get($id, $withInvoices=false)
+    {
+        $api = [
+            'verb'   => $this->actions['details']['verb'],
+            'action' => $this->actions['details']['action'],
+            'output' => 'TEXT',
+            'parameters' => [
+                'FIRM_ID' => $this->firmId,
+                'CUSTOMER_ID' => $id
+            ]
+        ];
+
+        $detail = $this->callApi($api);
+        if ($detail['success'] && $withInvoices) {
+            $invoices = $this->getInvoices($id);
+            if ($invoices['success']) {
+                $detail['response']['invoices'] = $invoices['response'];
+            }
+        }
+        return $detail;
+    }
+
+    public function save(Collection $customer)
+    {
+        $api = [
+            'verb'   => $this->actions['create']['verb'],
+            'action' => $this->actions['create']['action'],
+            'output' => 'TEXT',
+            'parameters' => [
+                'FIRM_ID' => $this->firmId
+            ],
+            'data' => $customer->toArray()
+        ];
+
+        return $this->callApi($api);
+
+    }
+
+    public function getInvoices($id) {
+        $api = [
+            'verb'   => $this->actions['invoices']['verb'],
+            'action' => $this->actions['invoices']['action'],
+            'output' => 'TEXT',
+            'parameters' => [
+                'FIRM_ID' => $this->firmId,
+                'CUSTOMER_ID' => $id
+            ]
+        ];
+
+        return $this->callApi($api);
+    }
 
 }

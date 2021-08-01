@@ -12,7 +12,7 @@ class FacturationProApi
     private $apiUrl;
     private $accountId;
     private $accountKey;
-    private $firmId;
+    protected $firmId;
     private $userAgent;
 
     public function __construct()

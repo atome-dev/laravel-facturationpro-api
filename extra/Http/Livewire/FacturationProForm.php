@@ -117,23 +117,6 @@ class FacturationProForm extends Component
             $api['parameters'] = $this->parameters;
         }
 
-
-        /*
-        if (isSet($templateApi['parameters'])) {
-
-            if (array_key_exists('FIRM_ID', $templateApi['parameters'])) {
-                $api['parameters']['FIRM_ID'] = $this->firmId ?? '';
-            }
-
-            if (array_key_exists('CUSTOMER_ID', $templateApi['parameters'])) {
-                $api['parameters']['CUSTOMER_ID'] = $this->customerId ?? '';
-            }
-
-            if (array_key_exists('INVOICE_ID', $templateApi['parameters'])) {
-                $api['parameters']['INVOICE_ID'] = $this->invoiceId ?? '';
-            }
-        }
-        */
         if ($this->order != '' && $this->sort != '') {
             $api['order'] = $this->order;
             $api['sort'] = $this->sort;
@@ -151,7 +134,8 @@ class FacturationProForm extends Component
             }
         }
 
-        $Api = new $this->categories[$this->category];
+        //$Api = new $this->categories[$this->category];
+        $Api = new FacturationProApi();
         $this->result = $Api->callApi($api);
     }
 }
